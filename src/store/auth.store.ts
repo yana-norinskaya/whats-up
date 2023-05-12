@@ -8,7 +8,7 @@ interface IUser {
 }
 
 interface IAuthState {
-  user: IUser | null;
+  user: IUser;
   setUser: (dataUser: IUser) => void;
   clear: () => void;
 }
@@ -17,11 +17,11 @@ export const useAuthStore = create<IAuthState>()(
   devtools(
     persist(
       (set) => ({
-        user: null,
+        user: { wid: "", idInstance: "", apiTokenInstance: "" },
         setUser: (dataUser: IUser) => set({ user: dataUser }),
         clear: () =>
           set({
-            user: null,
+            user: { wid: "", idInstance: "", apiTokenInstance: "" },
           }),
       }),
       {
