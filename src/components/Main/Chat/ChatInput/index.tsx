@@ -1,11 +1,31 @@
-import { Flex, TextInput } from "@mantine/core";
+import { FC } from "react";
+import { Button, TextInput } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { IconSend } from "@tabler/icons-react";
+import { fetchSendMessage } from "../../../../api/message.api";
+import { useAuthStore } from "../../../../store/auth.store";
+import { useChatStore } from "../../../../store/chat.store";
 
-const ChatInput = () => {
+export const ChatInput: FC = () => {
   const [text, setText] = useInputState("");
+  const { idInstance, apiTokenInstance } = useAuthStore((state) => state.user);
+  const { activeChat, setAddMessage } = useChatStore((state) => state);
 
-  const handleSend = () => {
+  const handleSend = async () => {
+    const infoMessage = {
+      chatId: activeChat,
+      message: text,
+    };
+    await fetchSendMessage(idInstance, apiTokenInstance, infoMessage)
+      .then((response) =>
+        setAddMessage({
+          chatId: activeChat,
+          idMessage: response.data.idMessage,
+          sendFrom: "You",
+          message: text,
+        })
+      )
+      .catch((e) => console.log(e));
     if (text.length) {
       setText("");
     }
@@ -23,27 +43,19 @@ const ChatInput = () => {
         w="90%"
         value={text}
         onChange={setText}
-        placeholder="drr"
+        placeholder="Напишите сообщение"
         size="md"
         radius="md"
         onKeyDown={keydown}
       />
-      <Flex
-        align="center"
-        justify="center"
-        bg="blue.5"
+      <Button
         w="2.5rem"
         h="2.5rem"
-        onClick={handleSend}
-        sx={{
-          borderRadius: "1.5rem",
-          cursor: "pointer",
-        }}
-      >
-        <IconSend color="white" size={20} />
-      </Flex>
+        radius="1.5rem"
+        p="0"
+        onClick={() => handleSend()}
+        children={<IconSend color="white" size={20} />}
+      />
     </>
   );
 };
-
-export default ChatInput;

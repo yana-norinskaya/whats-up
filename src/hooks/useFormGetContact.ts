@@ -1,15 +1,20 @@
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { useAuthStore } from "../store/auth.store";
-import { fetchContactInfo } from "../api/chat.api";
+import { fetchCheckWhatsapp, fetchContactInfo } from "../api/chat.api";
 import { useContactStore } from "../store/contact.store";
 import { useChatStore } from "../store/chat.store";
 
+interface IValueForm {
+  tel: string;
+}
+
 export const useFormGetContact = () => {
   const [loading, setLoading] = useState(false);
-  const setContact = useContactStore((state) => state.setContact);
-  const user = useAuthStore((state) => state.user);
-  const setActiveChat = useChatStore((state) => state.setActiveChat);
+  const { setContact, contacts } = useContactStore((state) => state);
+  const { idInstance, apiTokenInstance } = useAuthStore((state) => state.user);
+  const { setActiveChat } = useChatStore((state) => state);
+  const [error, setError] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -17,18 +22,49 @@ export const useFormGetContact = () => {
     },
   });
 
-  const handleSubmit = async (value: { tel: string }) => {
+  const handleSubmit = async (value: IValueForm) => {
     setLoading(true);
+    const regex = /[^0-9,.]/g;
     let val = {
-      chatId: value.tel + "@c.us",
+      chatId: `${value.tel.replace(regex, "")}@c.us`,
     };
-    await fetchContactInfo(user?.idInstance, user?.apiTokenInstance, val)
-      .then((data) => {
-        setContact(data.data);
-        setActiveChat(data.data.chatId);
+
+    let valueForCheckWhatsapp = {
+      phoneNumber: Number(value.tel.replace(regex, "")),
+    };
+
+    await fetchCheckWhatsapp(
+      idInstance,
+      apiTokenInstance,
+      valueForCheckWhatsapp
+    )
+      .then((response) => {
+        return response.data.existsWhatsapp;
       })
-      .catch((e) => console.log(e));
+      .then(async (existsWhatsapp) => {
+        if (existsWhatsapp) {
+          await fetchContactInfo(idInstance, apiTokenInstance, val)
+            .then((response) => {
+              setError(false);
+              if (
+                contacts.every(
+                  (contact) => contact.chatId !== response.data.chatId
+                )
+              ) {
+                setActiveChat(response.data.chatId);
+                setContact(response.data);
+              } else {
+                setActiveChat(response.data.chatId);
+              }
+            })
+            .catch((e) => setError(true));
+        } else {
+          form.setFieldError("tel", "Tакого номера не существует");
+        }
+      })
+      .catch((e) => setError(true));
+
     setLoading(false);
   };
-  return { form, handleSubmit, loading };
+  return { form, handleSubmit, loading, error };
 };

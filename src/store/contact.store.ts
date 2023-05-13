@@ -20,6 +20,7 @@ interface IContactInfo {
 interface IChatState {
   contacts: IContactInfo[];
   setContact: (contact: IContactInfo) => void;
+  deleteContact: (id: string) => void;
 }
 
 export const useContactStore = create<IChatState>()(
@@ -27,5 +28,9 @@ export const useContactStore = create<IChatState>()(
     contacts: [],
     setContact: (contact: IContactInfo) =>
       set((state) => ({ contacts: [...state.contacts, contact] })),
+    deleteContact: (id: string) =>
+      set((state) => ({
+        contacts: state.contacts.filter((item) => item.chatId !== id),
+      })),
   }))
 );

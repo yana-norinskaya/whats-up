@@ -1,4 +1,5 @@
 import axios from "axios";
+
 interface IData {
   wid: string;
   countryInstance: string;
@@ -20,7 +21,16 @@ interface IData {
 
 const apiHost = "https://api.green-api.com";
 
+//Получение данных пользователя
 const URL_GET_USER = (idInstance: string, api: string) =>
   `/waInstance${idInstance}/GetSettings/${api}`;
+
 export const fetchLogIn = (idInstance: string, api: string) =>
   axios.get<IData>(`${apiHost}${URL_GET_USER(idInstance, api)}`);
+
+// Log Out
+const URL_LOG_OUT = (idInstance: string, api: string) =>
+  `/waInstance${idInstance}/logout/${api}`;
+
+export const fetchLogout = (idInstance: string, api: string) =>
+  axios.get(`${apiHost}${URL_LOG_OUT(idInstance, api)}`);

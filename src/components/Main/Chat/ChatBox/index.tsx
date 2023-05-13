@@ -1,31 +1,21 @@
 import { ScrollArea, Stack } from "@mantine/core";
-import { FC, ReactNode } from "react";
+import { FC, RefObject, PropsWithChildren } from "react";
 
-const ChatBox: FC<{ children: ReactNode }> = ({ children }) => (
+interface IChatBox extends PropsWithChildren {
+  viewport: RefObject<HTMLDivElement>;
+}
+
+export const ChatBox: FC<IChatBox> = ({ children, viewport }) => (
   <ScrollArea
-    bg="lime.0"
+    bg="lime.1"
+    p="md"
     offsetScrollbars
+    viewportRef={viewport}
     h="100%"
     w="100%"
     pb="xl"
     variant="outline"
-    styles={() => ({
-      overflow: "auto",
-      WebkitMaskImage:
-        "linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 20px, rgba(0, 0, 0, 1) calc(100% - 20px), rgba(0, 0, 0, 0) 100%)",
-      maskImage:
-        "linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 20px, rgba(0, 0, 0, 1) calc(100% - 20px), rgba(0, 0, 0, 0) 100%)",
-      scrollbar: {
-        '&[data-orientation="vertical"]': {
-          ":hover": {
-            backgroundColor: "transparent",
-          },
-        },
-      },
-    })}
   >
     <Stack spacing="sm">{children}</Stack>
   </ScrollArea>
 );
-
-export default ChatBox;
