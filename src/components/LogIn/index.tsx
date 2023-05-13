@@ -1,7 +1,8 @@
+import { FC } from "react";
 import { TextInput, Button, Group } from "@mantine/core";
 import { useFormLogin } from "../../hooks/useFormLogin";
 
-export const LogIn = () => {
+export const LogIn: FC = () => {
   const { form, handleSubmit, loading } = useFormLogin();
 
   return (
@@ -24,7 +25,7 @@ export const LogIn = () => {
       />
 
       <Group position="right" mt="md">
-        <Button loading={loading} bg="green.9" type="submit">
+        <Button loading={loading} type="submit">
           Вoйти
         </Button>
       </Group>

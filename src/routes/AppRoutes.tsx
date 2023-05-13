@@ -8,8 +8,8 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        {user?.wid && <Route path="/" element={<MainPage />} />}
+        {!user?.wid && <Route path="*" element={<LoginPage />} />}
+        {user?.wid && <Route path="*" element={<MainPage />} />}
       </Routes>
     </BrowserRouter>
   );

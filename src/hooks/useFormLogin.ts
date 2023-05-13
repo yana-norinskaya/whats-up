@@ -4,6 +4,11 @@ import { useState } from "react";
 import { useAuthStore } from "../store/auth.store";
 import { useNavigate } from "react-router-dom";
 
+interface IValueLogIn {
+  idInstance: string;
+  apiTokenInstance: string;
+}
+
 export const useFormLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -15,22 +20,23 @@ export const useFormLogin = () => {
     },
   });
 
-  const handleSubmit = async (value: {
-    idInstance: string;
-    apiTokenInstance: string;
-  }) => {
+  const handleSubmit = async (value: IValueLogIn) => {
     setLoading(true);
-    await fetchLogIn(value.idInstance, value.apiTokenInstance)
+    const { idInstance, apiTokenInstance } = value;
+    await fetchLogIn(idInstance, apiTokenInstance)
       .then((data) => {
-        const obg = {
+        const response = {
           wid: data.data.wid,
-          idInstance: value.idInstance,
-          apiTokenInstance: value.apiTokenInstance,
+          idInstance: idInstance,
+          apiTokenInstance: apiTokenInstance,
         };
-        setUser(obg);
+        setUser(response);
         navigate("/");
       })
-      .catch((e) => console.log(e));
+      .catch(() => {
+        form.setFieldError("idInstance", "Неверные данные");
+        form.setFieldError("apiTokenInstance", "Неверные данные");
+      });
     setLoading(false);
   };
   return { form, handleSubmit, loading };
