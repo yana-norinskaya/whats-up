@@ -5,12 +5,16 @@ import { useNavigate } from "react-router";
 import { IconLogout } from "@tabler/icons-react";
 import { FC, useState } from "react";
 import { IMaskInput } from "react-imask";
+import { useChatStore } from "../../../../store/chat.store";
+import { useContactStore } from "../../../../store/contact.store";
 
 export const Header: FC = () => {
   const { form, handleSubmit, loading, error } = useFormGetContact();
   const [hover, setHover] = useState(false);
   const navigate = useNavigate();
   const { clear } = useAuthStore();
+  const { clearChat } = useChatStore();
+  const { clearContacts } = useContactStore();
   const theme = useMantineTheme();
 
   const handleLogOut = () => {
@@ -18,6 +22,8 @@ export const Header: FC = () => {
     let isLogOut = confirm("Вы действительно хотите выйти?");
     if (isLogOut) {
       clear();
+      clearChat();
+      clearContacts();
       navigate("/login");
     }
   };

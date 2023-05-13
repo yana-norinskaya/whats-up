@@ -21,6 +21,7 @@ interface IChatState {
   contacts: IContactInfo[];
   setContact: (contact: IContactInfo) => void;
   deleteContact: (id: string) => void;
+  clearContacts: () => void;
 }
 
 export const useContactStore = create<IChatState>()(
@@ -32,5 +33,6 @@ export const useContactStore = create<IChatState>()(
       set((state) => ({
         contacts: state.contacts.filter((item) => item.chatId !== id),
       })),
+    clearContacts: () => set({ contacts: [] }),
   }))
 );

@@ -13,16 +13,16 @@ interface IChatState {
   messages: IMessages[];
   setActiveChat: (id: string) => void;
   setAddMessage: (message: IMessages) => void;
+  clearChat: () => void;
 }
 
 function unique(arr: IMessages[]) {
-  var a = arr;
-  for (var i = 0; i < a.length; ++i) {
-    for (var j = i + 1; j < a.length; ++j) {
+  let a = arr;
+  for (let i = 0; i < a.length; ++i) {
+    for (let j = i + 1; j < a.length; ++j) {
       if (a[i].idMessage === a[j].idMessage) a.splice(j--, 1);
     }
   }
-
   return a;
 }
 
@@ -37,5 +37,6 @@ export const useChatStore = create<IChatState>()(
           ? unique([...state.messages, message])
           : unique([...state.messages]),
       })),
+    clearChat: () => set({ activeChat: "", messages: [] }),
   }))
 );

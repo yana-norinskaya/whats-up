@@ -16,6 +16,7 @@ export const ChatInput: FC = () => {
       chatId: activeChat,
       message: text,
     };
+    console.log(activeChat);
     await fetchSendMessage(idInstance, apiTokenInstance, infoMessage)
       .then((response) =>
         setAddMessage({
