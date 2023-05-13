@@ -1,11 +1,4 @@
-import {
-  Group,
-  Input,
-  Button,
-  useMantineTheme,
-  Divider,
-  Text,
-} from "@mantine/core";
+import { Group, Input, Button, useMantineTheme, Text } from "@mantine/core";
 import { useFormGetContact } from "../../../../hooks/useFormGetContact";
 import { useAuthStore } from "../../../../store/auth.store";
 import { useNavigate } from "react-router";

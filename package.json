@@ -2,6 +2,7 @@
   "name": "whats-up",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://yana-norinskaya.github.io/whats-up/",
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@mantine/core": "^6.0.10",
@@ -16,6 +17,7 @@
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "axios": "^1.4.0",
+    "gh-pages": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-imask": "^6.6.1",
