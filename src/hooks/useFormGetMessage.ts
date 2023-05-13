@@ -16,13 +16,19 @@ export const useFormGetMessage = () => {
               (item) => item.idMessage !== response.data?.body.idMessage
             )
           ) {
-            const { senderData, idMessage, messageData } = response.data?.body;
-            setAddMessage({
-              chatId: senderData.chatId,
-              idMessage: idMessage,
-              sendFrom: senderData.senderName,
-              message: messageData.textMessageData.textMessage,
-            });
+            const { senderData, idMessage, messageData, typeWebhook } =
+              response.data?.body;
+            if (
+              typeWebhook === "incomingMessageReceived" &&
+              messageData.typeMessage === "textMessage"
+            ) {
+              setAddMessage({
+                chatId: senderData.chatId,
+                idMessage: idMessage,
+                sendFrom: senderData.senderName,
+                message: messageData.textMessageData.textMessage,
+              });
+            }
 
             return response.data.receiptId;
           }
@@ -36,6 +42,9 @@ export const useFormGetMessage = () => {
   }, [messages, setAddMessage, apiTokenInstance, idInstance]);
 
   useEffect(() => {
-    getMessage();
+    const id = setInterval(() => {
+      getMessage();
+    }, 1000);
+    return () => clearInterval(id);
   }, [getMessage]);
 };

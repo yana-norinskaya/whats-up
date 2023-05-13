@@ -29,15 +29,9 @@ export const Chat: FC = () => {
     <Stack w="70%" h="100%" spacing="0">
       <HeaderChat />
       <ChatBox viewport={viewport}>
-        {renderMessage().map((message) => {
+        {renderMessage().map((message, i) => {
           const isYou = message.sendFrom === "You";
-          return (
-            <Message
-              key={message.idMessage}
-              message={message.message}
-              isYou={isYou}
-            />
-          );
+          return <Message key={i} message={message.message} isYou={isYou} />;
         })}
       </ChatBox>
       <Group position="center" p="sm" spacing="md" bg="gray.3">
