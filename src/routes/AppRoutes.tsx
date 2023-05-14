@@ -4,12 +4,12 @@ import { useAuthStore } from "../store/auth.store";
 import { MainPage } from "../pages/MainPage";
 
 const AppRoutes = () => {
-  const user = useAuthStore((state) => state.user);
+  const { wid } = useAuthStore((state) => state.user);
   return (
     <BrowserRouter>
       <Routes>
-        {!user?.wid && <Route path="*" element={<LoginPage />} />}
-        {user?.wid && <Route path="*" element={<MainPage />} />}
+        {!wid && <Route path="*" element={<LoginPage />} />}
+        {wid && <Route path="*" element={<MainPage />} />}
       </Routes>
     </BrowserRouter>
   );

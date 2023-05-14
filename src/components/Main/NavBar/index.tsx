@@ -7,30 +7,31 @@ import { IconTrash } from "@tabler/icons-react";
 
 export const NavbarMain: FC = () => {
   const { contacts, deleteContact } = useContactStore((state) => state);
-  const { activeChat, setActiveChat } = useChatStore((state) => state);
-
+  const { activeChat, setActiveChat, deleteDialog } = useChatStore(
+    (state) => state
+  );
   return (
     <Navbar w="30%" h="100%">
       <Header />
-      <Stack>
-        {contacts?.map(({ name, chatId, avatar }) => {
+      <Stack spacing="0.1rem">
+        {contacts.map(({ name, chatId, avatar }) => {
           const renderName = name ? name : parseInt(chatId);
+          const isActiveChat = activeChat === chatId;
           return (
             <Group
               key={chatId}
               h="4rem"
               w="100%"
               p="md"
-              bg={activeChat === chatId ? "lime.0" : "gray.0"}
+              bg={isActiveChat ? "lime.0" : "gray.0"}
               position="apart"
               sx={(theme) => ({
-                boxShadow:
-                  activeChat === chatId
-                    ? `4px 4px 4px 0px ${theme.colors.lime[8]}`
-                    : `4px 4px 4px 0px ${theme.colors.dark[2]}`,
+                boxShadow: isActiveChat
+                  ? `1px 1px 3px 0px ${theme.colors.lime[8]}`
+                  : `1px 1px 3px 0px ${theme.colors.dark[2]}`,
                 cursor: "pointer",
+                transition: "0.3s all ease",
                 ":hover": {
-                  boxShadow: `4px 4px 4px 0px ${theme.colors.lime[8]}`,
                   background: theme.colors.lime[0],
                 },
               })}
@@ -43,7 +44,10 @@ export const NavbarMain: FC = () => {
               <IconTrash
                 color="red"
                 style={{ cursor: "pointer" }}
-                onClick={() => deleteContact(chatId)}
+                onClick={() => {
+                  deleteContact(chatId);
+                  deleteDialog(chatId);
+                }}
               />
             </Group>
           );

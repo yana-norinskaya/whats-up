@@ -7,7 +7,7 @@ interface IChatBox extends PropsWithChildren {
 
 export const ChatBox: FC<IChatBox> = ({ children, viewport }) => (
   <ScrollArea
-    bg="lime.1"
+    bg="blue.3"
     p="md"
     offsetScrollbars
     viewportRef={viewport}

@@ -4,47 +4,41 @@ import { fetchDeleteNotification, fetchGetMessage } from "../api/message.api";
 import { useAuthStore } from "../store/auth.store";
 
 export const useFormGetMessage = () => {
-  const { messages, setAddMessage } = useChatStore((state) => state);
+  const { setAddMessage } = useChatStore((state) => state);
   const { idInstance, apiTokenInstance } = useAuthStore((state) => state.user);
 
   const getMessage = useCallback(async () => {
     await fetchGetMessage(idInstance, apiTokenInstance)
       .then((response) => {
-        if (response.data !== null && response.data !== undefined) {
+        if (response.data) {
+          const { senderData, idMessage, messageData, typeWebhook } =
+            response.data?.body;
           if (
-            messages.every(
-              (item) => item.idMessage !== response.data?.body.idMessage
-            )
+            typeWebhook === "incomingMessageReceived" &&
+            messageData.typeMessage === "textMessage"
           ) {
-            const { senderData, idMessage, messageData, typeWebhook } =
-              response.data?.body;
-            if (
-              typeWebhook === "incomingMessageReceived" &&
-              messageData.typeMessage === "textMessage"
-            ) {
-              setAddMessage({
-                chatId: senderData.chatId,
-                idMessage: idMessage,
-                sendFrom: senderData.senderName,
-                message: messageData.textMessageData.textMessage,
-              });
-            }
-
-            return response.data.receiptId;
+            setAddMessage({
+              chatId: senderData.chatId,
+              idMessage: idMessage,
+              sendFrom: senderData.senderName,
+              message: messageData.textMessageData.textMessage,
+            });
           }
+
+          return response.data.receiptId;
         }
       })
-      .then((id) => {
-        if (id !== undefined) {
-          fetchDeleteNotification(idInstance, apiTokenInstance, id);
+      .then((receiptId) => {
+        if (receiptId) {
+          fetchDeleteNotification(idInstance, apiTokenInstance, receiptId);
         }
       });
-  }, [messages, setAddMessage, apiTokenInstance, idInstance]);
+  }, [setAddMessage, apiTokenInstance, idInstance]);
 
   useEffect(() => {
-    const id = setInterval(() => {
+    const timerId = setInterval(() => {
       getMessage();
     }, 1000);
-    return () => clearInterval(id);
+    return () => clearInterval(timerId);
   }, [getMessage]);
 };

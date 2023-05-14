@@ -12,7 +12,7 @@ interface IValueLogIn {
 export const useFormLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const setUser = useAuthStore((state) => state.setUser);
+  const { setUser } = useAuthStore((state) => state);
   const form = useForm({
     initialValues: {
       idInstance: "",
@@ -24,14 +24,18 @@ export const useFormLogin = () => {
     setLoading(true);
     const { idInstance, apiTokenInstance } = value;
     await fetchLogIn(idInstance, apiTokenInstance)
-      .then((data) => {
-        const response = {
-          wid: data.data.wid,
+      .then((response) => {
+        const infoUser = {
+          wid: response.data.wid,
           idInstance: idInstance,
           apiTokenInstance: apiTokenInstance,
         };
-        setUser(response);
+        setUser(infoUser);
         navigate("/");
+        if (!response.data.wid) {
+          form.setFieldError("idInstance", "Аккаунт не авторизован");
+          form.setFieldError("apiTokenInstance", "Аккаунт не авторизован");
+        }
       })
       .catch(() => {
         form.setFieldError("idInstance", "Неверные данные");

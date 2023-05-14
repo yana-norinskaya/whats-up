@@ -16,16 +16,16 @@ export const ChatInput: FC = () => {
       chatId: activeChat,
       message: text,
     };
-    console.log(activeChat);
+
     await fetchSendMessage(idInstance, apiTokenInstance, infoMessage)
-      .then((response) =>
+      .then((response) => {
         setAddMessage({
           chatId: activeChat,
           idMessage: response.data.idMessage,
           sendFrom: "You",
           message: text,
-        })
-      )
+        });
+      })
       .catch((e) => console.log(e));
     if (text.length) {
       setText("");

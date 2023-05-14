@@ -57,13 +57,11 @@ export const useFormGetContact = () => {
                 setActiveChat(response.data.chatId);
               }
             })
-            .catch((e) => setError(true));
-        } else {
-          form.setFieldError("tel", "Tакого номера не существует");
+            .catch(() => setError(true));
         }
       })
-      .catch((e) => setError(true));
-
+      .catch(() => form.setFieldError("tel", "Tакого номера не существует"));
+    form.reset();
     setLoading(false);
   };
   return { form, handleSubmit, loading, error };
