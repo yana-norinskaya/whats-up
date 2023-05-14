@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/whats-up/static/js/main.c6890f74.js",
+    "main.js": "/whats-up/static/js/main.65facccf.js",
     "index.html": "/whats-up/index.html",
-    "main.c6890f74.js.map": "/whats-up/static/js/main.c6890f74.js.map"
+    "main.65facccf.js.map": "/whats-up/static/js/main.65facccf.js.map"
   },
   "entrypoints": [
-    "static/js/main.c6890f74.js"
+    "static/js/main.65facccf.js"
   ]
 }
